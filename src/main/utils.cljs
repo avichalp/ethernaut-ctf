@@ -76,5 +76,12 @@
 
 
 
-(defn str->wei [n]
+(defn eth-str->wei [n]
   (.parseEther (.-utils ethers) n))
+
+
+(defn wait-for-confirmations
+  [n]
+  "Returns a promise that resolves after n * 13 seconds"
+  (js/Promise. (fn [res]
+                 (js/setTimeout res (* 13 n)))))
