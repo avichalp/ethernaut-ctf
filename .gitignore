@@ -1,6 +1,8 @@
 node_modules/
 public/js
 out
+.clj-kondo
+.lsp
 
 /target
 /checkouts
