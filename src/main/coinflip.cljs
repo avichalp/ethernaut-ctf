@@ -115,9 +115,80 @@
 
 
 
-
-  (a/close! trigger-chan)
-
   (.-address w/rinkeby-wallet)
+
+
+  (do
+    (def fs (js/require "fs"))
+
+
+    (def verified-contracts
+      (cljs.reader/read-string (.readFileSync fs "/Users/avichalpandey/Work/ethscan-dump/verified_contracts.edn" "utf-8")))
+
+
+    (verified-contracts "0x3Fe65692bfCD0e6CF84cB1E7d24108E434A7587e")
+
+    (verified-contracts "0x44a93000bc53c6d091fdfa8cb5d1ac0ad20903a1")
+
+    ;; Get transactions in current block
+    (defn process-txns [txns]
+      (->> txns
+           (mapv (fn [txn]
+                   (select-keys txn [:maxFeePerGas :to :from :value])))
+           (mapv (fn [txn]
+                   (if-let [to (-> txn :to verified-contracts)]
+                     (assoc txn :to (str (:to txn) " // " to))
+                     txn)))
+           (mapv (fn [txn]
+                   (if-let [from (-> txn :from verified-contracts)]
+                     (assoc txn :from (str (:from txn) " // " from))
+                     txn))))
+      #_(for [txn txns]
+          (select-keys txn
+                       [:maxFeePerGas :to :from :value])))
+
+    (take 10 verified-contracts)
+
+    (process-txns
+     [(js-obj
+       "maxFeePerGas"
+       "25617619090"
+       "to"
+       "0xFbdDaDD80fe7bda00B901FbAf73803F2238Ae655"
+       "from"
+       "0xAEf87b30637F177A4Db561D95895BA5F3aA2705F"
+       "value"
+       "2104238765006399")]
+     ))
+
+  (a/go-loop [seconds 1]
+
+    (a/<! (a/timeout (* seconds 1000)))
+
+    (println "---- Waited for " (* seconds 1000) " seconds ----")
+
+    (-> (.getBlock w/mainnet-provider)
+        (.then (fn [txn-hash]
+                 ;;(.log js/console txn-hash)
+                 (.all js/Promise (mapv #(.getTransaction w/mainnet-provider %)
+                                        (aget txn-hash "transactions")))))
+        (.then (fn [txns]
+                 (.writeFile fs
+                             "onchain.log"
+                             (with-out-str
+                               (cljs.pprint/print-table (process-txns (js->clj txns :keywordize-keys true))))
+                             "utf-8"
+                             (fn [err]
+                               (if err
+                                 (.log js/console err)
+                                 (.log js/console :success))))
+                 #_(doseq [txn (clj->js (process-txns (js->clj txns :keywordize-keys true)))]
+                     (.log js/console txn)))))
+
+    (println "------ END OF BLOCK -----")
+    (recur (+ 15 seconds)))
+
+
+
 
   )

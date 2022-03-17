@@ -10,6 +10,8 @@
 (def contracts
   {:fallout               "/Fallout.sol/Fallout.json"
    :coinflip              "/CoinFlip.sol/Coinflip.json"
+   :telephone             "/Telephone.sol/Telephone.json"
+   :telephone/attack      "/Telephone.sol/TelephoneAttack.json"
    :privacy               "/Privacy.sol/Privacy.json"
    :elavator              "/Elevator.sol/Elevator.json"
    :attack                "/Attack.sol/Attack.json"
@@ -61,7 +63,7 @@
 
 
 (defn contract [contract-key wallet]
-  (let [path (str contracts-root (get contracts contract-key))]
+  (let [path (contracts contract-key)]
     (new (.-ContractFactory ethers)
          (clj->js (abi path))
          (bytecode path)
@@ -96,11 +98,4 @@
 (defn process-txns [txns]
   (for [txn txns]
     (select-keys (js->clj txn) [:maxFeePerGas :to :from :value :data])))
-
-
-#_(-> (.getBlock w/rinkeby-provider)
-    (.then (fn [txn-hash]
-             (.all js/Promise (mapv #(.getTransaction w/rinkeby-provider %)
-                                    (aget txn-hash "transactions")))))
-    (.then (fn [txns]
-             (println (process-txns (js->clj txns :keywordize-keys true))))))
+  
