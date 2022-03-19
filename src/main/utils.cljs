@@ -12,6 +12,7 @@
    :coinflip              "/CoinFlip.sol/Coinflip.json"
    :telephone             "/Telephone.sol/Telephone.json"
    :telephone/attack      "/Telephone.sol/TelephoneAttack.json"
+   :token                 "/Token.sol/Token.json"
    :privacy               "/Privacy.sol/Privacy.json"
    :elavator              "/Elevator.sol/Elevator.json"
    :attack                "/Attack.sol/Attack.json"
