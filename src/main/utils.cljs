@@ -13,6 +13,8 @@
    :telephone             "/Telephone.sol/Telephone.json"
    :telephone/attack      "/Telephone.sol/TelephoneAttack.json"
    :token                 "/Token.sol/Token.json"
+   :delegate              "/Delegate.sol/Delegate.json"
+   :delegate/delegation   "/Delegate.sol/Delegation.json"
    :privacy               "/Privacy.sol/Privacy.json"
    :elavator              "/Elevator.sol/Elevator.json"
    :attack                "/Attack.sol/Attack.json"
@@ -99,4 +101,11 @@
 (defn process-txns [txns]
   (for [txn txns]
     (select-keys (js->clj txn) [:maxFeePerGas :to :from :value :data])))
+
+
+(defn sig-hash [abi-path name]
+  (let [iface (new (-> ethers .-utils .-Interface)
+                   (clj->js
+                    (abi abi-path)))]
+    (.getSighash iface name)))
   
