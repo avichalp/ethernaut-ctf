@@ -1,6 +1,6 @@
-(ns fallout
-  (:require [utils :as u]
-            [wallets :as w]))
+(ns ctf.ethernaut.fallout
+  (:require [ctf.ethernaut.utils :as u]
+            [ctf.ethernaut.wallets :as w]))
 
 
 ;; Ethernaut Challenge #2

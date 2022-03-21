@@ -1,8 +1,8 @@
-(ns coinflip
+(ns ctf.ethernaut.coinflip
   (:require
    [cljs.core.async :as a]
-   [utils :as u]
-   [wallets :as w]))
+   [ctf.ethernaut.utils :as u]
+   [ctf.ethernaut.wallets :as w]))
 
 
 
@@ -11,6 +11,12 @@
 
 
 (def coinflip (atom ""))
+
+;; Every time something is PUT on this channel,
+;; it will send the Coinflip transaction.
+;; When ConsecutiveWins >= 10 the channel will be closed
+;; and the loop will terminate
+(def trigger-chan (a/chan))
 
 
 (defn is-div-1? [n1 n2]
@@ -62,12 +68,6 @@
       (.catch #(.log js/console %)))
 
   (do
-
-    ;; Every time something is PUT on this channel,
-    ;; it will send the Coinflip transaction.
-    ;; When ConsecutiveWins >= 10 the channel will be closed
-    ;; and the loop will terminate
-    (def trigger-chan (a/chan))
 
     (a/go-loop []
 

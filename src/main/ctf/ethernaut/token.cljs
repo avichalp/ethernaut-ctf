@@ -1,6 +1,6 @@
-(ns token
-  (:require [wallets :as w]
-            [utils :as u]))
+(ns ctf.ethernaut.token
+  (:require [ctf.ethernaut.wallets :as w]
+            [ctf.ethernaut.utils :as u]))
 
 
 

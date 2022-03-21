@@ -1,9 +1,10 @@
 {
-  "name": "ethernaut-ctf",
+  "name": "ctf",
   "version": "0.0.1",
   "private": true,
   "main": "index.js",
   "devDependencies": {
+    "shadow-cljs": "2.17.8",
     "@nomiclabs/hardhat-ethers": "^2.0.2",
     "@nomiclabs/hardhat-solhint": "^2.0.0",
     "@nomiclabs/hardhat-waffle": "^2.0.1",
@@ -13,11 +14,7 @@
     "hardhat": "^2.5.0",
     "prettier": "2.5.1",
     "prettier-plugin-solidity": "1.0.0-beta.19",
-    "shadow-cljs": "2.17.8",
-    "source-map-support": "^0.5.20"
-  },
-  "dependencies": {
-    "@chainlink/contracts": "^0.2.2",
+    "source-map-support": "^0.5.20",
     "@openzeppelin/contracts": "^4.2.0",
     "@openzeppelin/upgrades": "^2.8.0",
     "dotenv": "^16.0.0"

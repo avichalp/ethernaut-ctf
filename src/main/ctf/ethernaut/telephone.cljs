@@ -1,6 +1,6 @@
-(ns telephone
-  (:require [wallets :as w]
-            [utils :as u]))
+(ns ctf.ethernaut.telephone
+  (:require [ctf.ethernaut.wallets :as w]
+            [ctf.ethernaut.utils :as u]))
 
 
 (def telephone (atom ""))

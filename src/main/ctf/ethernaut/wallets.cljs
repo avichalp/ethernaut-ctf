@@ -1,5 +1,6 @@
-(ns wallets
+(ns ctf.ethernaut.wallets
   (:require ["hardhat" :as hre]))
+
 
 (def local (-> hre
                .-config

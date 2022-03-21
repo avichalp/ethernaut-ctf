@@ -1,6 +1,6 @@
-(ns delegate
-  (:require [utils :as u]
-            [wallets :as w]))
+(ns ctf.ethernaut.delegate
+  (:require [ctf.ethernaut.utils :as u]
+            [ctf.ethernaut.wallets :as w]))
 
 
 (def delegate (atom ""))
@@ -13,7 +13,6 @@
                   (clj->js
                    {:value (.parseEther (.-utils u/ethers) "100.0")
                     :to    (.-address user-wallet)}))
-
 
 
 (comment

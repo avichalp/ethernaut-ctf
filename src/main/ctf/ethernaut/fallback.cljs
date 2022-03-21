@@ -1,6 +1,6 @@
-(ns fallback
-  (:require [utils :as u]
-            [wallets :as w]))
+(ns ctf.ethernaut.fallback
+  (:require [ctf.ethernaut.utils :as u]
+            [ctf.ethernaut.wallets :as w]))
 
 
 ;; Ethernaut Challenge #1
