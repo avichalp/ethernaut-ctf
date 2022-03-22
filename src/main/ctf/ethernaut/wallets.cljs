@@ -1,5 +1,6 @@
 (ns ctf.ethernaut.wallets
-  (:require ["hardhat" :as hre]))
+  (:require ["hardhat" :as hre]
+            [ctf.ethernaut.utils :as u]))
 
 
 (def local (-> hre
@@ -35,3 +36,18 @@
 (def local-wallet (new (.-Wallet ethers)
                        "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
                        local-provider))
+
+
+(defn player
+  "Returns the player instance.
+  Creates a random wallet and and connects it with the
+  given provider."
+  [provider]
+  (.connect
+   (.createRandom (.-Wallet u/ethers))
+   provider))
+
+
+(comment
+  (player local-provider)
+  )

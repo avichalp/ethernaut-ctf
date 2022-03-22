@@ -14,13 +14,10 @@
             [cljs.core.async.interop :refer-macros [<p!]]))
 
 
-
 ;; Init the a new wallet for the player
 ;; Attach it with the local provider
 (def player
-  (.connect
-   (.createRandom (.-Wallet u/ethers))
-   w/local-provider))
+  (w/player w/local-provider))
 
 
 (defn deploy-force!
