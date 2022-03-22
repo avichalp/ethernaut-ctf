@@ -98,16 +98,26 @@
   [num]
   (.from (.-BigNumber ethers) num))
 
-
 ;; Get transactions in current block
 #_(defn process-txns [txns]
   (for [txn txns]
     (select-keys (js->clj txn) [:maxFeePerGas :to :from :value :data])))
 
 
-#_(defn sig-hash [abi-path name]
-  (let [iface (new (-> ethers .-utils .-Interface)
-                   (clj->js
-                    (abi abi-path)))]
-    (.getSighash iface name)))
+(comment
+
+  ;; TODO fix shadow cljs warning
+  (defn sig-hash [abi-path name]
+    (let [iface (new (-> ethers .-utils .-Interface)
+                     (clj->js
+                      (abi abi-path)))]
+      (.getSighash iface name)))
+
+  )
+
+
+
+
+
+
     
