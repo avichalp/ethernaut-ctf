@@ -6,6 +6,9 @@
 ;; Ethernaut Challenge #1
 ;; FALLBACK
 
+;; TODO: Add code to deploy on local
+;; TODO: use js/Promise inter-op
+
 ;; Get the rinkeby address from ethernaut.openzeppelin.com
 (def fallback-addr "0x13Ed5A695ae7fA5c7B2050dAde02A99089144046")
 
@@ -33,6 +36,7 @@
           (u/eth-str->wei "0.2")
           "gasLimit"
           80000))
+
 
 
 (comment
