@@ -18,6 +18,7 @@
      :delegate/delegation   "/Delegate.sol/Delegation.json"
      :force                 "/Force.sol/Force.json"
      :force/attacker        "/Force.sol/Attacker.json"
+     :vault                 "/Vault.sol/Vault.json"
      :privacy               "/Privacy.sol/Privacy.json"
      :elavator              "/Elevator.sol/Elevator.json"
      :attack                "/Attack.sol/Attack.json"
@@ -116,8 +117,18 @@
   )
 
 
+(defn text->bytes32
+  [text]
+  (.formatBytes32String (.-utils ethers) text))
 
 
+(defn bytes32->text
+  [bytes32]
+  (.parseBytes32String (.-utils ethers) bytes32))
 
-
-    
+(comment
+  
+  (bytes32->text   
+   "0x6162633132340000000000000000000000000000000000000000000000000000")
+  
+  )
