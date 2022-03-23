@@ -4,11 +4,13 @@
   "src/test"]
 
  :dependencies
- [[org.clojure/core.async "1.3.618"]]
+ [[org.clojure/core.async "1.3.618"]
+  [cljfmt "0.8.0"]]
 
  :builds
  {:app {:asset-path "/js"
         :output-dir "out"
         :main       ctf.ethernaut.core/main
         :output-to  "out/script.js"
-        :target     :node-script}}}
+        :target     :node-script
+        :compiler-options {:infer-externs :auto}}}}

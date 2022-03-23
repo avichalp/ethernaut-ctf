@@ -38,16 +38,44 @@
                        local-provider))
 
 
-(defn player
+(defn get-player!
   "Returns the player instance.
   Creates a random wallet and and connects it with the
-  given provider."
+  given provider.
+
+  Also funds the new wallet with 10 ETH using the main wallet"
   [provider]
-  (.connect
-   (.createRandom (.-Wallet u/ethers))
-   provider))
+  (let [player (.connect
+                (.createRandom (.-Wallet u/ethers))
+                provider)
+        tx     (clj->js
+                {:value (u/eth-str->wei "500")
+                 :to    (.-address player)})]
+    (do
+      (.sendTransaction ^js local-wallet tx)
+      player)))
+
+
+
+(defn fund!
+  "Sends specified amount of funds from given wallet to the address. Value should be string representing number of ETH
+
+  Returns js/Promise"
+  [value wallet addr]
+  (let [tx (clj->js
+            {:value (u/eth-str->wei value)
+             :to    addr})]
+    (.sendTransaction ^js wallet tx)))
 
 
 (comment
-  (player local-provider)
+
+
+  (get-player! local-provider)
+
+  (fund! "1"
+         local-wallet
+         (.-address (player local-provider)))
+
+
   )

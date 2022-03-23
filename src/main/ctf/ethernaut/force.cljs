@@ -17,7 +17,7 @@
 ;; Init the a new wallet for the player
 ;; Attach it with the local provider
 (def player
-  (w/player w/local-provider))
+  (w/get-player! w/local-provider))
 
 
 (defn deploy-force!
@@ -37,13 +37,7 @@
     (.deploy contract addr)))
 
 
-(defn initial-funding!
-  "Sends initial funds the newly created wallet from Owner's wallet"
-  []
-  (let [tx (clj->js
-                 {:value (u/eth-str->wei "100.0")
-                  :to    (.-address player)})]
-    (.sendTransaction w/local-wallet tx)))
+
 
 
 (defn trigger!
@@ -61,8 +55,7 @@
   []
   (a/go
     (try
-      (let [tx (<p! (initial-funding!))
-            force    (<p! (deploy-force!))
+      (let [force    (<p! (deploy-force!))
             attacker (<p! (deploy-attacker! (.-address force)))
             trigger  (<p! (trigger! attacker))]
         (<p!

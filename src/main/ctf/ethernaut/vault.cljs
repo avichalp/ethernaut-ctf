@@ -20,7 +20,7 @@
 
 
 (defn deploy-vault!
-  "Owner deploys the Vault contract with that player needs to attack!
+  "Owner deploys the Vault contract that player needs to attack!
    Returns the `js/Promise`."
   [password]
   (let [contract (u/contract :vault
@@ -41,9 +41,7 @@
                                                pswd-slot))
             before-locked? (<p! (.locked vault))
             _              (<p! (.unlock vault pswd))
-            after-locked?  (<p! (.locked vault))
-            _ (def _before-locked? before-locked?)
-            _ (def _after-locked? after-locked?)]
+            after-locked?  (<p! (.locked vault))]
         [before-locked?, after-locked?])
       (catch js/Error err
         (js/console.log (ex-cause err))))))

@@ -28,3 +28,4 @@ artifacts
 
 .env
 .calva
+.emacs_backups
