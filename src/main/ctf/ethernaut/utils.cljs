@@ -22,6 +22,8 @@
    :privacy               "/Privacy.sol/Privacy.json"
    :king                  "/King.sol/King.json"
    :king/attacker         "/King.sol/Attack.json"
+   :reentrance            "/Reentrance.sol/Reentrance.json"
+   :reentrance/attacker   "/Reentrance.sol/Attacker.json"
    :elavator              "/Elevator.sol/Elevator.json"
    :attack                "/Attack.sol/Attack.json"
    :gatekeeperone         "/Gatekeeperone.sol/Gatekeeperone.json"
@@ -129,6 +131,8 @@
   (.parseBytes32String (.-utils ethers) bytes32))
 
 (comment
+
+  (compile-all!)
   
   (bytes32->text   
    "0x6162633132340000000000000000000000000000000000000000000000000000")
