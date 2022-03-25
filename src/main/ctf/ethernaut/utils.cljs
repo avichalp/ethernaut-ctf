@@ -24,7 +24,8 @@
    :king/attacker         "/King.sol/Attack.json"
    :reentrance            "/Reentrance.sol/Reentrance.json"
    :reentrance/attacker   "/Reentrance.sol/Attacker.json"
-   :elavator              "/Elevator.sol/Elevator.json"
+   :elevator              "/Elevator.sol/Elevator.json"
+   :building              "/Building.sol/Building.json"
    :attack                "/Attack.sol/Attack.json"
    :gatekeeperone         "/Gatekeeperone.sol/Gatekeeperone.json"
    :gatekeeperone-attack  "/GatekeeperOneAttack.sol/GatekeeperOneAttack.json"
@@ -80,7 +81,7 @@
          wallet)))
 
 
-(defn get-event-arg
+#_(defn get-event-arg
   [response ename n]
   (let [event (->> (get (js->clj response) "events")
                    (filter #(= (get % "event") ename))
@@ -93,9 +94,9 @@
   (.parseEther (.-utils ethers) n))
 
 
-(defn wait-for-confirmations
-  [n]
+#_(defn wait-for-confirmations
   "Returns a promise that resolves after n * 13 seconds"
+  [n]  
   (js/Promise. (fn [res]
                  (js/setTimeout res (* 13 n)))))
 
