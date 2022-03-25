@@ -57,7 +57,7 @@
     (try
       (let [force    (<p! (deploy-force!))
             attacker (<p! (deploy-attacker! (.-address force)))
-            trigger  (<p! (trigger! attacker))]
+            _  (<p! (trigger! attacker))]
         (<p!
          (.getBalance
           w/local-provider
@@ -68,8 +68,6 @@
 
 (comment
 
-
-  (initial-funding!)
 
   (deploy-force!)
 

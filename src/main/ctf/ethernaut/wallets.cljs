@@ -3,7 +3,7 @@
             [ctf.ethernaut.utils :as u]))
 
 
-(def local (-> hre
+#_(def local (-> hre
                .-config
                .-networks
                .-localhost))
@@ -51,9 +51,8 @@
         tx     (clj->js
                 {:value (u/eth-str->wei "500")
                  :to    (.-address player)})]
-    (do
-      (.sendTransaction ^js local-wallet tx)
-      player)))
+    (.sendTransaction ^js local-wallet tx)
+    player))
 
 
 
@@ -72,6 +71,8 @@
 
 
   (get-player! local-provider)
+
+  (def player "")
 
   (fund! "1"
          local-wallet
