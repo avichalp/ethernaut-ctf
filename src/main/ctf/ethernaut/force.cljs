@@ -37,9 +37,6 @@
     (.deploy contract addr)))
 
 
-
-
-
 (defn trigger!
   "Player triggers the attack by sending the tx to the Attacker contract
   This will make the Attacker contract call SELFDESTRUCT

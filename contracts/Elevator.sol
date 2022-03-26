@@ -23,5 +23,3 @@ contract Elevator {
         }
     }
 }
-
-

