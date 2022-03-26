@@ -131,9 +131,20 @@
   [bytes32]
   (.parseBytes32String (.-utils ethers) bytes32))
 
+
+(defn random-hex
+  [size]
+  (let [rb (.randomBytes (.-utils ethers) size)]
+    (.hexlify (.-utils ethers) rb)))
+
+
+
 (comment
 
   (compile-all!)
+
+  (random-hex 32)
+  
   
   (bytes32->text   
    "0x6162633132340000000000000000000000000000000000000000000000000000")
