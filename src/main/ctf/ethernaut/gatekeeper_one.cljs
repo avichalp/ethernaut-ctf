@@ -56,7 +56,7 @@
 
 ;; todo: take & rest args and spread it in .deploy call
 (defn deploy-attacker!
-  "Deploys the GatekeeperOne contract using Owner's wallet!
+  "Deploys the attacker contract using players' wallet!
    Returns the `js/Promise`."
   [gatekeeper-addr key gas]
   (let [contract (u/contract
