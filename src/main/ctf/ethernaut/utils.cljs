@@ -31,6 +31,8 @@
    :gatekeeperone/attack  "/GatekeeperOne.sol/GatekeeperOneAttack.json"
    :gatekeepertwo         "/GatekeeperTwo.sol/GatekeeperTwo.json"
    :gatekeepertwo/attack  "/GatekeeperTwo.sol/GatekeeperTwoAttack.json"
+   :naught-coin           "/NaughtCoin.sol/NaughtCoin.json"
+   :naught-coin/attack    "/NaughtCoin.sol/NaughtCoinAttack.json"
    :preservation          "/Preservation.sol/Preservation.json"
    :preservation/library  "/Preservation.sol/LibraryContract.json"
    :preservation/attack   "/PreservationAttack.sol/LibraryContract.json"
