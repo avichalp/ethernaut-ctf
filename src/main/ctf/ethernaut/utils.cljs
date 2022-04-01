@@ -35,7 +35,7 @@
    :naught-coin/attack    "/NaughtCoin.sol/NaughtCoinAttack.json"
    :preservation          "/Preservation.sol/Preservation.json"
    :preservation/library  "/Preservation.sol/LibraryContract.json"
-   :preservation/attack   "/PreservationAttack.sol/LibraryContract.json"
+   :preservation/attack   "/Preservation.sol/LibraryContractAttack.json"
    :recovery/recovery     "/Recovery.sol/Recovery.json"
    :recovery/simple-token "/Recovery.sol/SimpleToken.json"
    :magicnum-solver       "/MagicNumSolver.sol/MagicNumSolver.json"
