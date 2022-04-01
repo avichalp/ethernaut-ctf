@@ -43,4 +43,5 @@ import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 contract NaughtCoinAttack {
     function attack(address naughtAddr, uint256 balance) public payable {
         IERC20(naughtAddr).transferFrom(msg.sender, address(this), balance);        
+    }
 }
