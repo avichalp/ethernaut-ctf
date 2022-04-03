@@ -38,7 +38,8 @@
    :preservation/attack   "/Preservation.sol/LibraryContractAttack.json"
    :recovery/recovery     "/Recovery.sol/Recovery.json"
    :recovery/simple-token "/Recovery.sol/SimpleToken.json"
-   :magicnum-solver       "/MagicNumSolver.sol/MagicNumSolver.json"
+   :magicnum              "/MagicNum.sol/MagicNum.json"
+   :magicnum/solver       "/MagicNum.sol/MagicNumSolver.json"
    :denial                "/Denial.sol/Denial.json"
    :denial-attack         "/DenialAttack.sol/DenialAttack.json"})
 
