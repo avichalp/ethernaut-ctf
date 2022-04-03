@@ -42,8 +42,19 @@
   stored in the code storage and returned
   on deployment.
 
+  `evm --json --code 600a80600b6000396000f3602a60005260206000f3 run`
+
+  {'output':'602a60005260206000f3','gasUsed':'0x18','time':1632158}
+
+
   The next 10 bytes is the minimal code to return
-  the number 42 (0x2a)."
+  the number 42 (0x2a).
+
+
+  `evm --json --code 602a60005260206000f3 run`
+
+  {'output':'000000000000000000000000000000000000000000000000000000000000002a','gasUsed':'0x12','time':1923565}
+  "
   "600a80600b6000396000f3602a60005260206000f3")
 
 
