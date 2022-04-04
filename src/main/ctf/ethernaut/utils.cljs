@@ -40,6 +40,7 @@
    :recovery/simple-token "/Recovery.sol/SimpleToken.json"
    :magicnum              "/MagicNum.sol/MagicNum.json"
    :magicnum/solver       "/MagicNum.sol/MagicNumSolver.json"
+   :alien-codex           "/AlienCodex.sol/AlienCodex.json"
    :denial                "/Denial.sol/Denial.json"
    :denial-attack         "/DenialAttack.sol/DenialAttack.json"})
 
