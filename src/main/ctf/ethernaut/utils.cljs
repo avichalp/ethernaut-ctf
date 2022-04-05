@@ -42,7 +42,7 @@
    :magicnum/solver       "/MagicNum.sol/MagicNumSolver.json"
    :alien-codex           "/AlienCodex.sol/AlienCodex.json"
    :denial                "/Denial.sol/Denial.json"
-   :denial-attack         "/DenialAttack.sol/DenialAttack.json"})
+   :denial/attack         "/Denial.sol/DenialAttack.json"})
 
 
 
