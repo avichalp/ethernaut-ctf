@@ -42,8 +42,9 @@
    :magicnum/solver       "/MagicNum.sol/MagicNumSolver.json"
    :alien-codex           "/AlienCodex.sol/AlienCodex.json"
    :denial                "/Denial.sol/Denial.json"
-   :denial/attack         "/Denial.sol/DenialAttack.json"})
-
+   :denial/attack         "/Denial.sol/DenialAttack.json"
+   :shop                  "/Shop.sol/Shop.json"
+   :buyer                 "/Buyer.sol/Buyer.json"})
 
 
 (defn compile-all!
