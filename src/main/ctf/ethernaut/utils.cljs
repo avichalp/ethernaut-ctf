@@ -44,7 +44,8 @@
    :denial                "/Denial.sol/Denial.json"
    :denial/attack         "/Denial.sol/DenialAttack.json"
    :shop                  "/Shop.sol/Shop.json"
-   :buyer                 "/Buyer.sol/Buyer.json"})
+   :buyer                 "/Buyer.sol/Buyer.json"
+   :dex                   "/Dex.sol/Dex.json"})
 
 
 (defn compile-all!
