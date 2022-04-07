@@ -24,6 +24,20 @@
              token2-addr)))
 
 
+(defn deploy-swappable-token!
+  "Deploys the attacker contract using players' wallet!
+   Returns the `js/Promise`."
+  [name sym initial-supply]
+  (let [contract (u/contract
+                  :dex/swappable-token
+                  w/local-wallet)]
+    (.deploy contract
+             name
+             sym
+             initial-supply)))
+
+
+
 (comment
 
   (do
@@ -75,9 +89,102 @@
 
   (cljs.pprint/print-table @balance-logs)
 
+
+  ;; setup ;;
+
   (-> (u/compile-all!)
       (.then #(.log js/console %))
       (.catch #(.log js/console %)))
+
+
+  (def token-a (atom {}))
+  (-> (deploy-swappable-token!
+       "TokenA"
+       "TOKA"
+       (u/eth-str->wei "1000"))
+      (.then #(reset! token-a %))
+      (.catch #(.log js/console %)))
+
+
+  (def token-b (atom {}))
+  (-> (deploy-swappable-token!
+       "TokenB"
+       "TOKB"
+       (u/eth-str->wei "1000"))
+      (.then #(reset! token-b %))
+      (.catch #(.log js/console %)))
+
+
+  (def dex (atom {}))
+  (-> (deploy-dex! (.-address @token-a)
+                   (.-address @token-b))
+      (.then #(reset! dex %))
+      (.catch #(.log js/console %)))
+
+
+  ;; transfer 10 TOKA from local wallet to player
+  (-> (.transfer  @token-a
+                  #_(.-address w/local-wallet)
+                  (.-address player)
+                  (u/eth-str->wei "10")
+                  )
+      (.then #(.log js/console %))
+      (.catch #(.log js/console %)))
+
+  ;; transfer 100 TOKA from local wallet to dex
+  (-> (.transfer  @token-a
+                  (.-address @dex)
+                  (u/eth-str->wei "100")
+                  )
+      (.then #(.log js/console %))
+      (.catch #(.log js/console %)))
+
+  (-> (.balanceOf  @token-a
+                   (.-address player))
+      (.then #(.log js/console %))
+      (.catch #(.log js/console %)))
+
+  (-> (.balanceOf  @token-a
+                   (.-address @dex))
+      (.then #(.log js/console %))
+      (.catch #(.log js/console %)))
+
+
+  ;; transfer 10 TOKB from local wallet to player
+  (-> (.transfer  @token-b
+                  #_(.-address w/local-wallet)
+                  (.-address player)
+                  (u/eth-str->wei "10")
+                  )
+      (.then #(.log js/console %))
+      (.catch #(.log js/console %)))
+
+  ;; transfer 100 TOKB from local wallet to dex
+  (-> (.transfer  @token-b
+                  (.-address @dex)
+                  (u/eth-str->wei "100"))
+      (.then #(.log js/console %))
+      (.catch #(.log js/console %)))
+
+
+  (-> (.balanceOf  @token-b
+                   (.-address player))
+      (.then #(.log js/console %))
+      (.catch #(.log js/console %)))
+
+  (-> (.balanceOf  @token-b
+                   (.-address @dex))
+      (.then #(.log js/console %))
+      (.catch #(.log js/console %)))
+
+
+
+
+  (-> (.decimals @token-b)
+      (.then #(.log js/console %))
+      (.catch #(.log js/console %)))
+
+
 
 
   )

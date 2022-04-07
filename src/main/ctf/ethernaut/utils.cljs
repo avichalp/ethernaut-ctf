@@ -45,7 +45,8 @@
    :denial/attack         "/Denial.sol/DenialAttack.json"
    :shop                  "/Shop.sol/Shop.json"
    :buyer                 "/Buyer.sol/Buyer.json"
-   :dex                   "/Dex.sol/Dex.json"})
+   :dex                   "/Dex.sol/Dex.json"
+   :dex/swappable-token   "/Dex.sol/SwappableToken.json"})
 
 
 (defn compile-all!
