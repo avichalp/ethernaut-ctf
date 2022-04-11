@@ -9,44 +9,46 @@
 (def contracts-root "./artifacts/contracts")
 
 (def contracts
-  {:fallout               "/Fallout.sol/Fallout.json"
-   :coinflip              "/CoinFlip.sol/Coinflip.json"
-   :telephone             "/Telephone.sol/Telephone.json"
-   :telephone/attack      "/Telephone.sol/TelephoneAttack.json"
-   :token                 "/Token.sol/Token.json"
-   :delegate              "/Delegate.sol/Delegate.json"
-   :delegate/delegation   "/Delegate.sol/Delegation.json"
-   :force                 "/Force.sol/Force.json"
-   :force/attacker        "/Force.sol/Attacker.json"
-   :vault                 "/Vault.sol/Vault.json"
-   :privacy               "/Privacy.sol/Privacy.json"
-   :king                  "/King.sol/King.json"
-   :king/attacker         "/King.sol/Attack.json"
-   :reentrance            "/Reentrance.sol/Reentrance.json"
-   :reentrance/attacker   "/Reentrance.sol/Attacker.json"
-   :elevator              "/Elevator.sol/Elevator.json"
-   :building              "/Building.sol/Building.json"
-   :attack                "/Attack.sol/Attack.json"
-   :gatekeeperone         "/GatekeeperOne.sol/GatekeeperOne.json"
-   :gatekeeperone/attack  "/GatekeeperOne.sol/GatekeeperOneAttack.json"
-   :gatekeepertwo         "/GatekeeperTwo.sol/GatekeeperTwo.json"
-   :gatekeepertwo/attack  "/GatekeeperTwo.sol/GatekeeperTwoAttack.json"
-   :naught-coin           "/NaughtCoin.sol/NaughtCoin.json"
-   :naught-coin/attack    "/NaughtCoin.sol/NaughtCoinAttack.json"
-   :preservation          "/Preservation.sol/Preservation.json"
-   :preservation/library  "/Preservation.sol/LibraryContract.json"
-   :preservation/attack   "/Preservation.sol/LibraryContractAttack.json"
-   :recovery/recovery     "/Recovery.sol/Recovery.json"
-   :recovery/simple-token "/Recovery.sol/SimpleToken.json"
-   :magicnum              "/MagicNum.sol/MagicNum.json"
-   :magicnum/solver       "/MagicNum.sol/MagicNumSolver.json"
-   :alien-codex           "/AlienCodex.sol/AlienCodex.json"
-   :denial                "/Denial.sol/Denial.json"
-   :denial/attack         "/Denial.sol/DenialAttack.json"
-   :shop                  "/Shop.sol/Shop.json"
-   :buyer                 "/Buyer.sol/Buyer.json"
-   :dex                   "/Dex.sol/Dex.json"
-   :dex/swappable-token   "/Dex.sol/SwappableToken.json"})
+  {:fallout                     "/Fallout.sol/Fallout.json"
+   :coinflip                    "/CoinFlip.sol/Coinflip.json"
+   :telephone                   "/Telephone.sol/Telephone.json"
+   :telephone/attack            "/Telephone.sol/TelephoneAttack.json"
+   :token                       "/Token.sol/Token.json"
+   :delegate                    "/Delegate.sol/Delegate.json"
+   :delegate/delegation         "/Delegate.sol/Delegation.json"
+   :force                       "/Force.sol/Force.json"
+   :force/attacker              "/Force.sol/Attacker.json"
+   :vault                       "/Vault.sol/Vault.json"
+   :privacy                     "/Privacy.sol/Privacy.json"
+   :king                        "/King.sol/King.json"
+   :king/attacker               "/King.sol/Attack.json"
+   :reentrance                  "/Reentrance.sol/Reentrance.json"
+   :reentrance/attacker         "/Reentrance.sol/Attacker.json"
+   :elevator                    "/Elevator.sol/Elevator.json"
+   :building                    "/Building.sol/Building.json"
+   :attack                      "/Attack.sol/Attack.json"
+   :gatekeeperone               "/GatekeeperOne.sol/GatekeeperOne.json"
+   :gatekeeperone/attack        "/GatekeeperOne.sol/GatekeeperOneAttack.json"
+   :gatekeepertwo               "/GatekeeperTwo.sol/GatekeeperTwo.json"
+   :gatekeepertwo/attack        "/GatekeeperTwo.sol/GatekeeperTwoAttack.json"
+   :naught-coin                 "/NaughtCoin.sol/NaughtCoin.json"
+   :naught-coin/attack          "/NaughtCoin.sol/NaughtCoinAttack.json"
+   :preservation                "/Preservation.sol/Preservation.json"
+   :preservation/library        "/Preservation.sol/LibraryContract.json"
+   :preservation/attack         "/Preservation.sol/LibraryContractAttack.json"
+   :recovery/recovery           "/Recovery.sol/Recovery.json"
+   :recovery/simple-token       "/Recovery.sol/SimpleToken.json"
+   :magicnum                    "/MagicNum.sol/MagicNum.json"
+   :magicnum/solver             "/MagicNum.sol/MagicNumSolver.json"
+   :alien-codex                 "/AlienCodex.sol/AlienCodex.json"
+   :denial                      "/Denial.sol/Denial.json"
+   :denial/attack               "/Denial.sol/DenialAttack.json"
+   :shop                        "/Shop.sol/Shop.json"
+   :buyer                       "/Buyer.sol/Buyer.json"
+   :dex                         "/Dex.sol/Dex.json"
+   :dex/swappable-token         "/Dex.sol/SwappableToken.json"
+   :dex-two                     "/DexTwo.sol/DexTwo.json"
+   :dex-two/swappable-token-two "/DexTwo.sol/SwappableTokenTwo.json"})
 
 
 (defn compile-all!
@@ -103,13 +105,20 @@
 
 #_(defn wait-for-confirmations
   "Returns a promise that resolves after n * 13 seconds"
-  [n]  
+  [n]
   (js/Promise. (fn [res]
                  (js/setTimeout res (* 13 n)))))
 
 (defn big-num
   [num]
   (.from (.-BigNumber ethers) num))
+
+
+(defn big-min
+  "returns minimum of two BigNumbers"
+  [^js n1 ^js n2]
+  (if (.lte n1 n2) n1 n2))
+
 
 ;; Get transactions in current block
 #_(defn process-txns [txns]
@@ -151,9 +160,9 @@
   (compile-all!)
 
   (random-hex 32)
-  
-  
-  (bytes32->text   
+
+
+  (bytes32->text
    "0x6162633132340000000000000000000000000000000000000000000000000000")
-  
+
   )
