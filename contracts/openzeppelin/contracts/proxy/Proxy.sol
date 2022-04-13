@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.0;
+
 /**
  * @dev This abstract contract provides a fallback function that delegates all calls to another contract using the EVM
  * instruction `delegatecall`. We refer to the second contract as the _implementation_ behind the proxy, and it has to
@@ -34,8 +35,12 @@ abstract contract Proxy {
 
             switch result
             // delegatecall returns 0 on error.
-            case 0 { revert(0, returndatasize()) }
-            default { return(0, returndatasize()) }
+            case 0 {
+                revert(0, returndatasize())
+            }
+            default {
+                return(0, returndatasize())
+            }
         }
     }
 
@@ -59,7 +64,7 @@ abstract contract Proxy {
      * @dev Fallback function that delegates calls to the address returned by `_implementation()`. Will run if no other
      * function in the contract matches the call data.
      */
-    fallback () external payable virtual {
+    fallback() external payable virtual {
         _fallback();
     }
 
@@ -67,7 +72,7 @@ abstract contract Proxy {
      * @dev Fallback function that delegates calls to the address returned by `_implementation()`. Will run if call data
      * is empty.
      */
-    receive () external payable virtual {
+    receive() external payable virtual {
         _fallback();
     }
 
@@ -77,6 +82,5 @@ abstract contract Proxy {
      *
      * If overriden should call `super._beforeFallback()`.
      */
-    function _beforeFallback() internal virtual {
-    }
+    function _beforeFallback() internal virtual {}
 }

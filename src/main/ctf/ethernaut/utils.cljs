@@ -48,7 +48,10 @@
    :dex                         "/Dex.sol/Dex.json"
    :dex/swappable-token         "/Dex.sol/SwappableToken.json"
    :dex-two                     "/DexTwo.sol/DexTwo.json"
-   :dex-two/swappable-token-two "/DexTwo.sol/SwappableTokenTwo.json"})
+   :dex-two/swappable-token-two "/DexTwo.sol/SwappableTokenTwo.json"
+   :puzzle-wallet/wallet        "/PuzzleWallet.sol/PuzzleWallet.json"
+   :puzzle-wallet/proxy         "/PuzzleWallet.sol/PuzzleProxy.json"})
+
 
 
 (defn compile-all!
