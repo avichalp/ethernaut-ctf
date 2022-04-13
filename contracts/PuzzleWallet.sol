@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.6.0;
+pragma solidity ^0.8.0;
+
 pragma experimental ABIEncoderV2;
 
-import "@openzeppelin/contracts/math/SafeMath.sol";
-import "@openzeppelin/contracts/proxy/UpgradeableProxy.sol";
+import "./openzeppelin/contracts/math/SafeMath.sol";
+import "./openzeppelin/contracts/proxy/UpgradeableProxy.sol";
 
 contract PuzzleProxy is UpgradeableProxy {
     address public pendingAdmin;
