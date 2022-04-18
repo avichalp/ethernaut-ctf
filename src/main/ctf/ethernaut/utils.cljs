@@ -50,7 +50,12 @@
    :dex-two                     "/DexTwo.sol/DexTwo.json"
    :dex-two/swappable-token-two "/DexTwo.sol/SwappableTokenTwo.json"
    :puzzle-wallet/wallet        "/PuzzleWallet.sol/PuzzleWallet.json"
-   :puzzle-wallet/proxy         "/PuzzleWallet.sol/PuzzleProxy.json"})
+   :puzzle-wallet/proxy         "/PuzzleWallet.sol/PuzzleProxy.json"
+   :dep/crypto-vault            "/DoubleEntryPoint.sol/CryptoVault.json"
+   :dep/dep                     "/DoubleEntryPoint.sol/DoubleEntryPoint.json"
+   :dep/legacy-token            "/DoubleEntryPoint.sol/LegacyToken.json"
+   :dep/forta                   "/DoubleEntryPoint.sol/Forta.json"
+   :dep/detection-bot           "/DoubleEntryPoint.sol/DetectionBot.json"})
 
 
 

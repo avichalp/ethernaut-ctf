@@ -4,6 +4,7 @@ pragma solidity ^0.6.0;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
+
 interface DelegateERC20 {
   function delegateTransfer(address to, uint256 value, address origSender) external returns (bool);
 }
@@ -27,7 +28,7 @@ contract Forta is IForta {
       usersDetectionBots[msg.sender] = IDetectionBot(detectionBotAddress);
   }
 
-  function notify(address user, bytes calldata msgData) external override {
+  function notify(address user, bytes calldata msgData) external override {    
     if(address(usersDetectionBots[user]) == address(0)) return;
     try usersDetectionBots[user].handleTransaction(user, msgData) {
         return;
@@ -58,6 +59,7 @@ contract CryptoVault {
     */
 
     function sweepToken(IERC20 token) public {
+        
         require(token != underlying, "Can't transfer underlying token");
         token.transfer(sweptTokensRecipient, token.balanceOf(address(this)));
     }
@@ -125,5 +127,39 @@ contract DoubleEntryPoint is ERC20("DoubleEntryPointToken", "DET"), DelegateERC2
     ) public override onlyDelegateFrom fortaNotify returns (bool) {
         _transfer(origSender, to, value);
         return true;
+    }
+}
+
+contract DetectionBot is IDetectionBot {
+    address public player;
+    address public vault;        
+    IForta public forta;
+
+    constructor(IForta f, address v) public {
+        player = msg.sender;        
+        forta = f;
+        vault = v;                
+    }
+    function handleTransaction(address user, bytes calldata msgData) external override {
+        
+        // abi.decode doesn't work with this version of the compiler
+        // right shift (>> N) will move the element N bits towards right
+        // and pad the initial bits with 0. eg 00000000010101010
+        // taking bitwise OR (|) will juxtapose the msgByte[N] with msgByte[N+1]
+        // eg: 10101010 | 00000000010101010 => 1010101010101010
+        bytes4 sig =
+            msgData[0] |
+            (bytes4(msgData[1]) >> 8) |
+            (bytes4(msgData[2]) >> 16) |
+            (bytes4(msgData[3]) >> 24);                   
+
+
+        (address to, uint256 value, address from) = abi.decode(msgData[4:], (address,uint256,address));
+        
+        if (sig == bytes4(keccak256("delegateTransfer(address,uint256,address)")) && 
+            to == player &&
+            from == vault) {
+                forta.raiseAlert(user);
+        }     
     }
 }
