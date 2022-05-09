@@ -66,9 +66,54 @@ Like in the Vault Puzzle, we use getStorageAt to read the storage slots.
 
 
 ##### [Gatekeeper](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/gatekeeper_one.cljs)
+There are 3 modifiers on the `enter` function in the `GatekeeperOne` Contract. We look at these one by one
 
 
+```
+require(msg.sender != tx.origin)
+```
+
+1. To make sure this holds true we need to call the enter function from another contract. It will ensure that `tx.origin` is our EOA addr and `msg.sender` is the proxy contract we are using.
+
+```
+require(gasleft().mod(8191) == 0)
+```
+    
+2. By running contract locally, we can find out that it takes 254 gas until this line is executed in the EVM. 8191 + 254 will not be enough gas for our whole execution. We could we (N*8192 + 254) to make the modulus return 0.
+  
+```
+require(uint32(uint64(_gateKey)) == uint16(uint64(_gateKey)))
+require(uint32(uint64(_gateKey)) != uint64(_gateKey))
+require(uint32(uint64(_gateKey)) == uint16(tx.origin))
+```
+
+3. The last condition gives a hint that last 16 bits of the `_gateKey` should match our EOA address (tx.origin). Also last 16 bits should be equal to last 32 bits (first condition) but the whole 64 bit `_gatekey` must NOT be equal to last 32 bits of the key. We could just take last 2 bytes of our addr. Pad the remaing 6 bytes with 0 and change one nibble in the first 8 bits.
+
+
+  
 ##### [Gatekeeper Two](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/gatekeeper_two.cljs)
+Like in GatekeeperOne contract, we must clear the 3 modifiers.
+
+```
+require(msg.sender != tx.origin)
+```
+
+1. To make sure this condition is satisfied we will deploy an attacker contract as a proxy to call the `.enter` function.
+
+```
+assembly { x := extcodesize(caller()) }
+require(x == 0);
+```
+
+3. EXTCODESIZE is 0 when there is no code associated with the account. It is 0 for EOAs. We cannot use an EOA (first condition). To ensure that code size of our contract is 0, we will add nothing in the contract but the constructor. Because constructor is not the part of the 'deployed' bytecode that is put on chain.
+
+
+```
+require(uint64(bytes8(keccak256(abi.encodePacked(msg.sender)))) ^ uint64(_gateKey) == uint64(0) - 1)
+```
+3. The RHS will underflow. it will become `2^64 - 1`. LHS is a Bitwise XOR. To make XOR have a `true` or `1` output both its inputs must be either both 0 or both 1. We can send `_gateKey` as the negation of 8 bytes from the left of `sha3(msg.sender)` as uint64. The negation will ensure that all 64 bits are opposites. It will make all the bits of the Bitwise XOR result 1.
+ 
+
 
 
 ##### [Naught Coin](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/naugh_coin.cljs)
