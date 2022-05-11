@@ -144,6 +144,47 @@ Contract addresses are deterministic. You need the Creator's address and nonce t
 
 ### [Magic Number](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/magic_number.cljs)
 
+Answer: **600a80600b6000396000f3602a60005260206000f3**
+
+Get [evm](https://github.com/ethereum/go-ethereum/tree/master/cmd/evm) tool from geth repo use and `evm disasm` to decompile hex bytecode back to asm.
+
+
+```easm
+PUSH1 0x0a
+DUP1
+PUSH1 0x0b
+PUSH1 0x00
+CODECOPY
+PUSH1 0x00
+RETURN
+PUSH1 0x2a
+PUSH1 0x00
+MSTORE
+PUSH1 0x20
+PUSH1 0x00
+RETURN
+```
+
+First 11 bytes are contract code to be stored in the code storage and returned on deployment.
+
+```sh
+evm --json --code 600a80600b6000396000f3602a60005260206000f3 run
+```
+
+```
+{'output':'602a60005260206000f3','gasUsed':'0x18','time':1632158}
+```
+
+The next 10 bytes is the minimal code to return the number 42 (0x2a).
+
+```
+evm --json --code 602a60005260206000f3 run
+```
+
+```
+{'output':'000000000000000000000000000000000000000000000000000000000000002a','gasUsed':'0x12','time':1923565}
+```
+  
 
 ### [Alien Codex](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/alien_codex.cljs)
 
