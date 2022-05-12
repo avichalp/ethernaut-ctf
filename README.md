@@ -194,6 +194,17 @@ evm --json --code 602a60005260206000f3 run
 
 ### [Shop](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/shop.cljs)
 
+This problem is similar to Building and Elevator contracts. We first deploy the Buyer contract. It will have a `buy` function that triggers the attack. Our Buyer contract will also provide the implementation of the `price` function. In our price implementation, we will read the state of the Shop (isSold public var). If isSold is false, we return 101. Since the return value is greater than 100 it will pass the following if check.
+
+```solidity
+if (_buyer.price() >= price && !isSold) {
+  isSold = true;
+  price = _buyer.price();
+}
+```
+
+Next time the Shop contract call our `price function`, `isSold` will become true. In this case we will return price as 0.
+
 
 ### [Dex](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/dex.cljs)
 
