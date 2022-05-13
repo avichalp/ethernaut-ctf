@@ -208,6 +208,29 @@ Next time the Shop contract call our `price function`, `isSold` will become true
 
 ### [Dex](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/dex.cljs)
 
+The amount a trader gets back is:
+
+```
+A/B * amount
+```
+i.e. the Dex balance of the token they give divided by token they get back. If the traders wants to get back more than he gives. The ratio `A/B` (mentioned above) should be > 1.
+  
+To ensure this we alternate the direction of the trade. and we make the amount:
+
+```
+min(what-player-is-giving-to-dex, what-dex-is-giving-to-player)
+```
+
+With the starting balances of 100, 100, 10, 10. The following steps will execute:
+
+```
+min(from.dex, from.player)
+min(token-b.dex, token-b.player) -> (20, 90) -> 20
+min(token-a.dex, token-a.player) -> (86, 24) -> 24
+min(token-b.dex, token-b.player) -> (80, 30) -> 30
+min(token-a.dex, token-a.player) -> (69, 41) -> 41
+min(token-b.dex, token-b.player) -> (45, 65) -> 45
+```
 
 ### [Dex Two](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/dex_two.cljs)
 
