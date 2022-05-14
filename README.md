@@ -234,6 +234,8 @@ min(token-b.dex, token-b.player) -> (45, 65) -> 45
 
 ### [Dex Two](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/dex_two.cljs)
 
+This solution uses the same logic as the DEX contract (previous challenge). It just deploys 4 ERC20 contract (instead of 2 in DEX). Lets call them A, B, C & D. Then it repeatedly swaps A->C and C->A until Dex's balance for A becomes 0. Similarly do it for B->D and D->B.
+
 ### [Puzzle Wallet](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/puzzle_wallet.cljs)
 
 ### [Motorbike](https://github.com/avichalp/ethernaut-ctf-motorbike)
