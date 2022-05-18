@@ -69,19 +69,19 @@ Like in the Vault Puzzle, we use getStorageAt to read the storage slots.
 There are 3 modifiers on the `enter` function in the `GatekeeperOne` Contract. We look at these one by one
 
 
-```
+```solidity
 require(msg.sender != tx.origin)
 ```
 
 1. To make sure this holds true we need to call the enter function from another contract. It will ensure that `tx.origin` is our EOA addr and `msg.sender` is the proxy contract we are using.
 
-```
+```solidity
 require(gasleft().mod(8191) == 0)
 ```
     
 2. By running contract locally, we can find out that it takes 254 gas until this line is executed in the EVM. 8191 + 254 will not be enough gas for our whole execution. We could we (N*8192 + 254) to make the modulus return 0.
   
-```
+```solidity
 require(uint32(uint64(_gateKey)) == uint16(uint64(_gateKey)))
 require(uint32(uint64(_gateKey)) != uint64(_gateKey))
 require(uint32(uint64(_gateKey)) == uint16(tx.origin))
@@ -94,13 +94,13 @@ require(uint32(uint64(_gateKey)) == uint16(tx.origin))
 ### [Gatekeeper Two](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/gatekeeper_two.cljs)
 Like in GatekeeperOne contract, we must clear the 3 modifiers.
 
-```
+```solidity
 require(msg.sender != tx.origin)
 ```
 
 1. To make sure this condition is satisfied we will deploy an attacker contract as a proxy to call the `.enter` function.
 
-```
+```solidity
 assembly { x := extcodesize(caller()) }
 require(x == 0);
 ```
@@ -108,7 +108,7 @@ require(x == 0);
 3. EXTCODESIZE is 0 when there is no code associated with the account. It is 0 for EOAs. We cannot use an EOA (first condition). To ensure that code size of our contract is 0, we will add nothing in the contract but the constructor. Because constructor is not the part of the 'deployed' bytecode that is put on chain.
 
 
-```
+```solidity
 require(uint64(bytes8(keccak256(abi.encodePacked(msg.sender)))) ^ uint64(_gateKey) == uint64(0) - 1)
 ```
 3. The RHS will underflow. it will become `2^64 - 1`. LHS is a Bitwise XOR. To make XOR have a `true` or `1` output both its inputs must be either both 0 or both 1. We can send `_gateKey` as the negation of 8 bytes from the left of `sha3(msg.sender)` as uint64. The negation will ensure that all 64 bits are opposites. It will make all the bits of the Bitwise XOR result 1.
@@ -117,13 +117,13 @@ require(uint64(bytes8(keccak256(abi.encodePacked(msg.sender)))) ^ uint64(_gateKe
 ### [Naught Coin](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/naugh_coin.cljs)
 
 We will deploy an Attacker contract and 'Approve' it to spend the balance on our behalf.
-```
+```solidity
 if (msg.sender == player) {
-   require(now > timeLock);
-   _;
- } else {
-  _;
- }
+    require(now > timeLock);
+    _;
+    } else {
+    _;
+    }
 }
 ```
 The lock tokens modifier only check for vesting period if the 'Player' tries to spend his balance. With the ERC20's `approve` and `transferFrom` flow Attacker Contract can withdraw its balance (check is skipped as msg.sender != player) and send to itself.
@@ -171,17 +171,17 @@ First 11 bytes are contract code to be stored in the code storage and returned o
 evm --json --code 600a80600b6000396000f3602a60005260206000f3 run
 ```
 
-```
+```sh
 {'output':'602a60005260206000f3','gasUsed':'0x18','time':1632158}
 ```
 
 The next 10 bytes is the minimal code to return the number 42 (0x2a).
 
-```
+```sh
 evm --json --code 602a60005260206000f3 run
 ```
 
-```
+```sh
 {'output':'000000000000000000000000000000000000000000000000000000000000002a','gasUsed':'0x12','time':1923565}
 ```
   
@@ -237,6 +237,11 @@ min(token-b.dex, token-b.player) -> (45, 65) -> 45
 This solution uses the same logic as the DEX contract (previous challenge). It just deploys 4 ERC20 contract (instead of 2 in DEX). Lets call them A, B, C & D. Then it repeatedly swaps A->C and C->A until Dex's balance for A becomes 0. Similarly do it for B->D and D->B.
 
 ### [Puzzle Wallet](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/puzzle_wallet.cljs)
+Upgradeable Proxies uses `delegatecall` under the hood. In a `delegatecall` execution, the EVM uses caller's storage with callee's code. Storage slot #0 in the caller is `pendingAdmin`. In callee, the slot 0 is the `owner`. Storage slot #1 in the caller is `admin`, in callee it is `maxBalance`. 
+
+1. If we call `proposeNewAdmin` with player's address, whenever the wallet contract tries to access the `owner` it will get the value of `pendingAdmin` (player's address).
+2. Step 1 makes player practically the wallet contract. As an owner, it can add itself to whitelist by calling `addToWhitelist`.
+3. Finally, since player is now whitelisted, it can call `setMaxBalance` function with its own address (implicit cast to uint256). This step will make the wallet contract update the storage of proxy contract at the slot where `admin` is stored.
 
 ### [Motorbike](https://github.com/avichalp/ethernaut-ctf-motorbike)
 
