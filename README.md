@@ -246,3 +246,7 @@ Upgradeable Proxies uses `delegatecall` under the hood. In a `delegatecall` exec
 ### [Motorbike](https://github.com/avichalp/ethernaut-ctf-motorbike)
 
 ### [Double Entry Point](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/det.cljs)
+This level is interestring because in it have to defend vulnerable function insteading for attacking it. The 'player' will deploy a Forta's `DetectionBot` contract. The `handle_transaction` method of this contract will raise an alert if the `calldata` it recevies has:
+
+1. signature of `delegateTransfer`
+2. and funds from tranferred from the Vault to the recipient.
