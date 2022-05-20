@@ -35,7 +35,7 @@ The Vault keeps the \"password\" in private vars. Nothing is private on the bloc
 
 
 ### [King](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/king.cljs)
-To break this game we can 'King' a contract that 'cannot receive' ether. This way owner (deployer) won't be able to claim the kingship back.
+To break this game we can make 'King' a [contract](https://github.com/avichalp/ethernaut-ctf/blob/master/contracts/King.sol#L30) that 'cannot receive' ether. That is, the contracts lacks a `receive` or a `fallback` function. This way owner (deployer) won't be able to claim the kingship back.
 
 
 ### [Re-entrancy](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/reentrance.cljs)
