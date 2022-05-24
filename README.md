@@ -13,6 +13,7 @@ This repo uses hardhat, a JS-based Dapp framework with Clojurescript code snippe
 
 
 ### [CoinFlip](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/coinflip.cljs)
+The way to solve this problem is to call the `flip` function on consecutive blocks without missing any block in between otherwise it would reset the `consecutiveWins` variable. Make sure to pass appropriate fee (limit * price) so the transaction is included in the immediate next block.
 
 
 ### [Telephone](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/telephone.cljs)
