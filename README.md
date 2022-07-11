@@ -7,6 +7,7 @@ This repo uses hardhat, a JS-based Dapp framework with Clojurescript code snippe
 ## Solutions
 
 ### [Fallback](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/fallback.cljs)
+To gain ownership of the contract, first, call the contribution with the appropriate value to satisfy the condition require(msg.value < 0.001 ether). Then send some positive value to the Fallback contract to trigger its receive function. This will give you ownership of the contract. Next, you call the withdraw function as the owner.
 
 
 ### [Fallout](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/fallout.cljs)
