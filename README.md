@@ -19,6 +19,14 @@ The way to solve this problem is to call the `flip` function on consecutive bloc
 
 ### [Telephone](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/telephone.cljs)
 
+Deploy the "attacker" [contract](https://github.com/avichalp/ethernaut-ctf/blob/master/contracts/Telephone.sol) with the required address of the vulnerable contract.
+
+```solidity
+(tx.origin != msg.sender)
+```
+
+This is the vulnerable line. If we call the Telephone contract from an EOA: `tx.orgin == msg.sender`, to make them unequal we could use an attacker contract to call the `changeOwner` function.
+
 
 ### [Token](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/token.cljs)
 
