@@ -254,6 +254,7 @@ Upgradeable Proxies uses `delegatecall` under the hood. In a `delegatecall` exec
 3. Finally, since player is now whitelisted, it can call `setMaxBalance` function with its own address (implicit cast to uint256). This step will make the wallet contract update the storage of proxy contract at the slot where `admin` is stored.
 
 ### [Motorbike](https://github.com/avichalp/ethernaut-ctf-motorbike)
+There are two step to break this contract. First, initialize the Engine contract. The initialize function will set the msg.sender as "upgrader" which will let the player call `upgradeToAndCall`. Second, deploy a malicious contract that exposes a function (lets say "kill") that can trigger selfdestruct. Then call the `upgradeToAndCall` with the address of the malicious contract and function signature of "kill".
 
 ### [Double Entry Point](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/det.cljs)
 This level is interestring because in it have to defend vulnerable function insteading for attacking it. The 'player' will deploy a Forta's `DetectionBot` contract. The `handle_transaction` method of this contract will raise an alert if the `calldata` it recevies has:
