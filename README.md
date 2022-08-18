@@ -29,6 +29,7 @@ This is the vulnerable line. If we call the Telephone contract from an EOA: `tx.
 
 
 ### [Token](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/token.cljs)
+The main vulnerability in this contract is integer underflow. The balances map has the type `address->uint256`. The smallest value for unsigned integer (uint256) is 0. On decreasing the value further it will underflow to the max uint256 value that is 2^256 - 1.
 
 
 ### [Delegation](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/delegate.cljs)
