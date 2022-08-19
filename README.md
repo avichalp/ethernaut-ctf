@@ -205,6 +205,15 @@ evm --json --code 602a60005260206000f3 run
 
 ### [Alien Codex](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/alien_codex.cljs)
 
+The main attack vector in this concept is underflowing the array. In solidity, the head of the dynamic array stores its length. 
+
+In the current setup the storage slot 0 will contain the owner and the storage slot 1 will have the length of the array (`bytes32[]`). The first array element will start at storage slot: `keccak256(uint256(head))`. 
+
+If we can underflow the head of the array its length will become 2^256. It will allow us to access any storage slot in the contract just by accessing the corresponding array index. It means the 0th storage slot can be accessed as:
+
+`2**256 (length of storage)  - keccak256(uint256(head))`
+
+
 
 ### [Denial](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/denial.cljs)
 
