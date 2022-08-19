@@ -7,16 +7,17 @@ This repo uses hardhat, a JS-based Dapp framework with Clojurescript code snippe
 ## Solutions
 
 ### [Fallback](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/fallback.cljs)
-To gain ownership of the contract, first, call the contribution with the appropriate value to satisfy the condition require(msg.value < 0.001 ether). Then send some positive value to the Fallback contract to trigger its receive function. This will give you ownership of the contract. Next, you call the withdraw function as the owner.
+To gain ownership of the [contract](https://github.com/avichalp/ethernaut-ctf/blob/master/contracts/Fallback.sol), first, call the contribution with the appropriate value to satisfy the condition require(msg.value < 0.001 ether). Then send some positive value to the Fallback contract to trigger its receive function. This will give you ownership of the contract. Next, you call the withdraw function as the owner.
 
 
 ### [Fallout](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/fallout.cljs)
 
-Looking carefully at the name of the constructor function we can see that the name of the function is not same as the contract’s name. That means that this function is not a constructor. This function is part of the deployed bytecode and can be called by anyone. We can call this function to gain the ownership of this contract.
+Looking carefully at the name of the constructor function in this [contract](https://github.com/avichalp/ethernaut-ctf/blob/master/contracts/Fallout.sol) we can see that the name of the function is not same as the contract’s name. That means that this function is not a constructor. This function is part of the deployed bytecode and can be called by anyone. We can call this function to gain the ownership of this contract.
 
 
 ### [CoinFlip](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/coinflip.cljs)
-The way to solve this problem is to call the `flip` function on consecutive blocks without missing any block in between otherwise it would reset the `consecutiveWins` variable. Make sure to pass appropriate fee (limit * price) so the transaction is included in the immediate next block.
+
+The way to solve this [problem](https://github.com/avichalp/ethernaut-ctf/blob/master/contracts/CoinFlip.sol) is to call the `flip` function on consecutive blocks without missing any block in between otherwise it would reset the `consecutiveWins` variable. Make sure to pass appropriate fee (limit * price) so the transaction is included in the immediate next block.
 
 
 ### [Telephone](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/telephone.cljs)
@@ -31,33 +32,42 @@ This is the vulnerable line. If we call the Telephone contract from an EOA: `tx.
 
 
 ### [Token](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/token.cljs)
-The main vulnerability in this contract is integer underflow. The balances map has the type `address->uint256`. The smallest value for unsigned integer (uint256) is 0. On decreasing the value further it will underflow to the max uint256 value that is 2^256 - 1.
+
+The main vulnerability in this [contract](https://github.com/avichalp/ethernaut-ctf/blob/master/contracts/Token.sol) is integer underflow. The balances map has the type `address->uint256`. The smallest value for unsigned integer (uint256) is 0. On decreasing the value further it will underflow to the max uint256 value that is 2^256 - 1.
 
 
 ### [Delegation](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/delegate.cljs)
 
 The first thing to understand about this setup is how the delegate call works. In a delegate call, caller's storage is used and callee's code is used. 
 
-The goal of this challenge is to get the ownership of the `Delegation` contract. We need to trigger a call to the fallback while making sure that the `calldata` has the function signature of the `pwn` function i.e. 0xdd365b8b.
+The goal of this challenge is to get the ownership of the `Delegation` [contract](https://github.com/avichalp/ethernaut-ctf/blob/master/contracts/Delegate.sol). We need to trigger a call to the fallback while making sure that the `calldata` has the function signature of the `pwn` function i.e. 0xdd365b8b.
 
 
 ### [Force](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/force.cljs)
 
-The Force contract doesn't have a `fallback` or `receive` functions. But we can still send ehter to it! The trick is create another contract with a positive balance. Then use `SELFDESTRUCT` on the contract you created. Selfdestruct lets you specify an address. When EVM executes SELFDESTRUCT instruction it sends any ehter that the contract has to the specifed address.
+The Force contract doesn't have a `fallback` or `receive` functions. But we can still send ehter to it!
+
+The trick is to create another contract with a positive balance. Then use `SELFDESTRUCT` on the contract you created. Selfdestruct lets you specify an address. When EVM executes SELFDESTRUCT instruction it sends any ehter that the contract has to the specifed address.
 
 
 ### [Vault](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/vault.cljs)
 
-The Vault keeps the \"password\" in private vars. Nothing is private on the blockchain! We can exploit it my using `getStorageAt` to extract the password. To call `getStorageAt` we must know the storage slot where the actual password is stored. Since its takes 256 bits to store that password. It will get its own slot. And it will be after the the 1st slot. The first slot stores a `bool` called `locked`.
+The Vault keeps the \"password\" in private [vars](https://github.com/avichalp/ethernaut-ctf/blob/master/contracts/Vault.sol). Nothing is private on the blockchain! 
+
+We can exploit it my using `getStorageAt` to extract the password. To call `getStorageAt` we must know the storage slot where the actual password is stored. Since its takes 256 bits to store that password. It will get its own slot. And it will be after the the 1st slot. The first slot stores a `bool` called `locked`.
 
 
 ### [King](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/king.cljs)
-To break this game we can make 'King' a [contract](https://github.com/avichalp/ethernaut-ctf/blob/master/contracts/King.sol#L30) that 'cannot receive' ether. That is, the contracts lacks a `receive` or a `fallback` function. This way owner (deployer) won't be able to claim the kingship back.
+
+To break this game we have to make 'King' a [contract](https://github.com/avichalp/ethernaut-ctf/blob/master/contracts/King.sol#L30) that **cannot** receive ether. 
+
+That means, the our malicious [contract](https://github.com/avichalp/ethernaut-ctf/blob/master/contracts/King.sol#L30) must lack a `receive` or a `fallback` function. This way owner (deployer) won't be able to claim the kingship back.
 
 
 ### [Re-entrancy](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/reentrance.cljs)
 
-The Rentrance contract has the most infamous vulnerability in the ETH ecosystem (see DAO hack). This is the solidity code of interest.
+The Rentrance contract has the most infamous vulnerability in the ETH ecosystem (see the DAO hack). This is the solidity code of interest.
+
 ```solidity
   if(balances[msg.sender] >= _amount) {
       (bool result,) = msg.sender.call{value:_amount}('');
@@ -67,19 +77,21 @@ The Rentrance contract has the most infamous vulnerability in the ETH ecosystem 
       balances[msg.sender] -= _amount;
   }
   ```
-  As we see that the msg.sender can `receive` the amount first. Before it gets reduced from the balances map.
-  The receiver (msg.sender), one who calls withdraw, to exploit can call the withdraw in its `receive` function.
-  The checks that balances[msg.sender] >= _amount will always pass in this case. The account, with such a
-  `receive` function can drain the Reentrance contract until there is no more balance left.
+  
+As we can see that the msg.sender can `receive` the amount first. Before it gets reduced from the balances map.
+  
+The receiver (msg.sender), the one who calls withdraw, to exploit the vulnerability, can call the withdraw again in its `receive` function. The check `balances[msg.sender] >= _amount` will always pass in this case. The [contract](https://github.com/avichalp/ethernaut-ctf/blob/master/contracts/Reentrance.sol#L31), with such a `receive` function can drain the Reentrance contract until there is no more balance left.
 
 
 ### [Elevator](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/elevator.cljs)
 
-We have the definition of Elevator and an interface of Building. We can the implementation of Building contract that conforms to the given interface. Since we are provding the implementation we can alwalys return `false` from the `isTopFloor` function.
+We have the definition of Elevator contract and an interface of the Building contract. We can the implementation of Building contract that conforms to the given interface. 
+
+Since we are providing the (malicious) [implementation](https://github.com/avichalp/ethernaut-ctf/blob/master/contracts/Building.sol) we can always return `false` from the `isTopFloor` function.
 
 ### [Privacy](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/privacy.cljs)
 
-Like in the Vault Puzzle, we use getStorageAt to read the storage slots.
+Like in the [Vault](https://github.com/avichalp/ethernaut-ctf#vault) puzzle, we use getStorageAt to read the storage slots.
 
 
 ### [Gatekeeper](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/gatekeeper_one.cljs)
@@ -90,13 +102,13 @@ There are 3 modifiers on the `enter` function in the `GatekeeperOne` Contract. W
 require(msg.sender != tx.origin)
 ```
 
-1. To make sure this holds true we need to call the enter function from another contract. It will ensure that `tx.origin` is our EOA addr and `msg.sender` is the proxy contract we are using.
+1. To make sure this holds true we need to call the enter function from another (attacker) [contract](https://github.com/avichalp/ethernaut-ctf/blob/master/contracts/GateKeeperOne.sol#L33). It will ensure that `tx.origin` is our EOA addr and `msg.sender` is the proxy contract we are using.
 
 ```solidity
 require(gasleft().mod(8191) == 0)
 ```
     
-2. By running contract locally, we can find out that it takes 254 gas until this line is executed in the EVM. 8191 + 254 will not be enough gas for our whole execution. We could we (N*8192 + 254) to make the modulus return 0.
+2. By running contract locally, we can find out that it takes 254 gas until this line is executed in the EVM. 8191 + 254 will not be enough gas for our whole execution. We could use (N*8192 + 254) to make the modulus return 0.
   
 ```solidity
 require(uint32(uint64(_gateKey)) == uint16(uint64(_gateKey)))
@@ -109,31 +121,34 @@ require(uint32(uint64(_gateKey)) == uint16(tx.origin))
 
   
 ### [Gatekeeper Two](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/gatekeeper_two.cljs)
+
 Like in GatekeeperOne contract, we must clear the 3 modifiers.
 
 ```solidity
 require(msg.sender != tx.origin)
 ```
 
-1. To make sure this condition is satisfied we will deploy an attacker contract as a proxy to call the `.enter` function.
+1. To make sure this condition is satisfied we will deploy an attacker [contract](https://github.com/avichalp/ethernaut-ctf/blob/master/contracts/GatekeeperTwo.sol#L32) as a proxy to call the `.enter` function.
 
 ```solidity
 assembly { x := extcodesize(caller()) }
 require(x == 0);
 ```
 
-3. EXTCODESIZE is 0 when there is no code associated with the account. It is 0 for EOAs. We cannot use an EOA (first condition). To ensure that code size of our contract is 0, we will add nothing in the contract but the constructor. Because constructor is not the part of the 'deployed' bytecode that is put on chain.
+2. EXTCODESIZE is 0 when there is no code associated with the account. It is 0 for EOAs. We cannot use an EOA (first condition). To ensure that code size of our contract is 0, we will add nothing in the contract but the constructor. Because constructor is not the part of the "deployed" bytecode.
 
 
 ```solidity
 require(uint64(bytes8(keccak256(abi.encodePacked(msg.sender)))) ^ uint64(_gateKey) == uint64(0) - 1)
 ```
+
 3. The RHS will underflow. it will become `2^64 - 1`. LHS is a Bitwise XOR. To make XOR have a `true` or `1` output both its inputs must be either both 0 or both 1. We can send `_gateKey` as the negation of 8 bytes from the left of `sha3(msg.sender)` as uint64. The negation will ensure that all 64 bits are opposites. It will make all the bits of the Bitwise XOR result 1.
  
 
 ### [Naught Coin](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/naugh_coin.cljs)
 
-We will deploy an Attacker contract and 'Approve' it to spend the balance on our behalf.
+We will deploy an Attacker [contract](https://github.com/avichalp/ethernaut-ctf/blob/master/contracts/NaughtCoin.sol#L40) and give it the 'Approval' to spend the balance on our behalf.
+
 ```solidity
 if (msg.sender == player) {
     require(now > timeLock);
@@ -143,20 +158,33 @@ if (msg.sender == player) {
     }
 }
 ```
-The lock tokens modifier only check for vesting period if the 'Player' tries to spend his balance. With the ERC20's `approve` and `transferFrom` flow Attacker Contract can withdraw its balance (check is skipped as msg.sender != player) and send to itself.
+
+The lock tokens modifier only check for vesting period if the 'Player' tries to spend his balance. 
+
+With the ERC20's `approve` and `transferFrom` flow the Attacker Contract can withdraw its balance (check is skipped as `msg.sender != player`) and send to itself.
 
 ### [Preservation](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/preservation.cljs)
 
 To break the `Preservation` contract we must understand that if contract A delegatecall's contract B then, on the evm, contract B's code is executed with the storage of contract A! Here owner's address is at storage slot 2. First we will deploy a 'malicious' contract. 
 
-The `LibraryContract` updates the storage slot 0 of its caller with the argument that is passed to the  function `setFirstTime`. We will make `LibraryContract` update the slot 0 of `Preservation` contract with our 'malicious' contract. In our malicious contract, we will mimick the API of the actual Library contract. But we will make it overwrite the slot 2 (where owner's address is stored) of the caller contract with our own address. 
+The `LibraryContract` updates the storage slot 0 of its caller with the argument that is passed to the  function `setFirstTime`. We will make `LibraryContract` update the slot 0 of `Preservation` contract with our 'malicious' [contract](https://github.com/avichalp/ethernaut-ctf/blob/master/contracts/Preservation.sol#L40).
+
+In our malicious contract, we will mimick the API of the actual Library contract. But we will make it overwrite the slot 2 (where owner's address is stored) of the caller contract with our own address. 
 
 To claim the ownership of the contract, we call `setFirstTime` again but this time with the 'player' addr.
 
 
 ### [Recovery](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/recovery.cljs)
 
-Contract addresses are deterministic. You need the Creator's address and nonce to compute the deployed address Using Recovery contract we an find address of the SimpleToken. Then we can call `.destroy` to trigger `SELFDESTRUCT`. It will drain the contract.
+Contract addresses are deterministic. You need the Creator's address and nonce to compute the deployed address.
+
+```python
+>>> import rlp, sha3
+>>> sha3.sha3_256(rlp.encode(["000000000000000000000000000073656e646572".decode('hex'), 0])).hexdigest()[24:]
+'1f2a98889594024bffda3311cbe69728d392c06d'
+```
+
+Using the [Recovery](https://github.com/avichalp/ethernaut-ctf/blob/master/contracts/Recovery.sol) contract we an find address of the SimpleToken. Then we can call `.destroy` to trigger `SELFDESTRUCT`. It will drain the contract.
 
 
 ### [Magic Number](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/magic_number.cljs)
@@ -192,7 +220,7 @@ evm --json --code 600a80600b6000396000f3602a60005260206000f3 run
 {'output':'602a60005260206000f3','gasUsed':'0x18','time':1632158}
 ```
 
-The next 10 bytes is the minimal code to return the number 42 (0x2a).
+The next 10 bytes is the minimal code to return the number 42 (0x2a). This is the main task in this [challenge](https://github.com/avichalp/ethernaut-ctf/blob/master/contracts/MagicNum.sol). 
 
 ```sh
 evm --json --code 602a60005260206000f3 run
@@ -205,7 +233,7 @@ evm --json --code 602a60005260206000f3 run
 
 ### [Alien Codex](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/alien_codex.cljs)
 
-The main attack vector in this concept is underflowing the array. In solidity, the head of the dynamic array stores its length. 
+The main attack vector in this [contract](https://github.com/avichalp/ethernaut-ctf/blob/master/contracts/AlienCodex.sol) is underflowing the array. In solidity, the head of the dynamic array stores its length. 
 
 In the current setup the storage slot 0 will contain the owner and the storage slot 1 will have the length of the array (`bytes32[]`). The first array element will start at storage slot: `keccak256(uint256(head))`. 
 
@@ -216,6 +244,11 @@ If we can underflow the head of the array its length will become 2^256. It will 
 
 
 ### [Denial](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/denial.cljs)
+
+Similar to the reentrancy [challenge](https://github.com/avichalp/ethernaut-ctf#re-entrancy), the Denial contract also exposes a rentrancy vulnerability
+
+To exploit it we will deploy a malicious partner [contract](https://github.com/avichalp/ethernaut-ctf/blob/master/contracts/Denial.sol#L38). We will the our malicious contract as the "partner" then we will call the `withdraw` function to trigger the reentrancy
+
 
 
 ### [Shop](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/shop.cljs)
