@@ -36,6 +36,10 @@ The main vulnerability in this contract is integer underflow. The balances map h
 
 ### [Delegation](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/delegate.cljs)
 
+The first thing to understand about this setup is how the delegate call works. In a delegate call, caller's storage is used and callee's code is used. 
+
+The goal of this challenge is to get the ownership of the `Delegation` contract. We need to trigger a call to the fallback while making sure that the `calldata` has the function signature of the `pwn` function i.e. 0xdd365b8b.
+
 
 ### [Force](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/force.cljs)
 
