@@ -12,6 +12,8 @@ To gain ownership of the contract, first, call the contribution with the appropr
 
 ### [Fallout](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/fallout.cljs)
 
+Looking carefully at the name of the constructor function we can see that the name of the function is not same as the contract’s name. That means that this function is not a constructor. This function is part of the deployed bytecode and can be called by anyone. We can call this function to gain the ownership of this contract.
+
 
 ### [CoinFlip](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/coinflip.cljs)
 The way to solve this problem is to call the `flip` function on consecutive blocks without missing any block in between otherwise it would reset the `consecutiveWins` variable. Make sure to pass appropriate fee (limit * price) so the transaction is included in the immediate next block.
