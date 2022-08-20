@@ -176,7 +176,7 @@ To claim the ownership of the contract, we call `setFirstTime` again but this ti
 
 ### [Recovery](https://github.com/avichalp/ethernaut-ctf/blob/master/src/main/ctf/ethernaut/recovery.cljs)
 
-Contract addresses are deterministic. You need the Creator's address and nonce to compute the deployed address.
+Contract addresses are deterministic. You need the Creator's address and nonce to compute the deployed address. The address is the sha3 hash of the RLP encoding of the list `[address of sender, nonce]`
 
 ```python
 >>> import rlp, sha3
